@@ -51,10 +51,10 @@ end
 
 # Estimate S(𝐪,ω) at temperature kT and evaluate the sum rule using both the
 # classical-to-quantum correspondence factor and moment renormalization.
-function estimate_sum(sys::System{N}, κ, kT, sim_params) where N
+function estimate_sum(sys::System{N}, κ, kT, sim_params; observables=nothing) where N
     (; nω, ωmax, Δt, Δt_therm, dur_therm, dur_decorr, nsamples, λ) = sim_params
 
-    sc = dynamical_correlations(sys; Δt, nω, ωmax)
+    sc = dynamical_correlations(sys; Δt, nω, ωmax, observables)
     saved_coherents = copy(sys.coherents)
     ndecorr = round(Int, dur_decorr/Δt_therm)
     ntherm = round(Int, dur_therm/Δt_therm)
