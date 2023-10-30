@@ -67,7 +67,7 @@ function FeI2_magnetic_unit_cell(; gs = 1, seed=nothing)
     return sys, cryst
 end
 
-function FeI2_sys(dims=(4,4,4); gs=1, seed=nothing)
+function FeI2_sys_and_cryst(dims=(4,4,4); gs=1, seed=nothing)
     sys, cryst = FeI2_magnetic_unit_cell(; gs, seed)
     resize_supercell(sys, dims), cryst
 end
