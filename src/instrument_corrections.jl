@@ -4,7 +4,7 @@ function convolve_sequoia(slice, ωs)
     @assert length(ωs) == size(slice)[end] "Number of enegy values does not match slice dimension"
 
     # Load sequoia resolution data
-    data = CSV.read(datadir("sequoia", "FWHM_per_energy.csv"), DataFrame)
+    data = CSV.read(datadir("instrument_data", "sequoia_FWHM_per_energy.csv"), DataFrame)
     Es, FWHMs = data.energy, data.FWHM
     σs = σ_from_FWHM.(FWHMs)
     println(σs)
@@ -16,7 +16,7 @@ function convolve_sequoia(slice, ωs)
             error("No resolution data available above 11.3 meV")
         end
         σ = σ_seq[ω]
-        gauss = @. 1/(σ*√(2π))*exp(- (ωs - ω)^2 / (2*σ^2))
+        gauss = @. 1/(σ*√(2π))*exp(-(ωs - ω)^2 / (2σ^2))
         for j ∈ 1:size(slice)[1]
             slice′[j,i] = slice[j,:] ⋅ gauss
         end
