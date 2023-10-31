@@ -1,11 +1,13 @@
-# FiniteTemperatureFeI2
+# Quantum-to-classical crossover in generalized spin systems -- the temperature-dependent spin dynamics of FeI2
+
+The repository demonstrates the basic procedures for reproducing the calculations in the 2023 manuscript, ["Quantum-to-classical crossover in generalized spin systems -- the temperature-dependent spin dynamics of FeI2".](https://put.link.here.when.available)
+
+## Notes on implementation and execution
 
 This code base is using the [Julia Language](https://julialang.org/) and
 [DrWatson](https://juliadynamics.github.io/DrWatson.jl/stable/)
 to make a reproducible scientific project named
 > FiniteTemperatureFeI2
-
-It is authored by ddahlbom.
 
 To (locally) reproduce this project, do the following:
 
@@ -25,6 +27,6 @@ everything should work out of the box, including correctly finding local paths.
 You may notice that most scripts start with the commands:
 ```julia
 using DrWatson
-@quickactivate "FiniteTemperatureFeI2"
+@quickactivate "2023-Dahlbom-Quantum_to_classical_crossover"
 ```
 which auto-activate the project and enable local path handling from DrWatson.
