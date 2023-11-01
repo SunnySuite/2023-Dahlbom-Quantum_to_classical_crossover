@@ -55,7 +55,7 @@ thermalize!(sys, kT_meV, Δt_therm, dur_therm)
 end
 
 # Save the results.
-data = DrWatson.@strdict sc sys cryst
+data = DrWatson.@strdict sc sys cryst kT_meV
 wsave(datadir("dssf", "renormalized.jld2"), data)
 
 # And, for comparison, we'll calculate the the same thing without applying the
@@ -69,5 +69,5 @@ thermalize!(sys, kT_meV, Δt_therm, dur_therm)
 end
 
 # Save the results.
-data = DrWatson.@strdict sc sys cryst
+data = DrWatson.@strdict sc sys cryst kT_meV
 wsave(datadir("dssf", "unrenormalized.jld2"), data)
