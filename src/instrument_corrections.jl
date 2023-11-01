@@ -1,11 +1,13 @@
+using DelimitedFiles
+
 σ_from_FWHM(FWHM) = FWHM / (2*√2log(2))
 
 function convolve_sequoia(slice, ωs)
     @assert length(ωs) == size(slice)[end] "Number of enegy values does not match slice dimension"
 
     # Load sequoia resolution data
-    data = CSV.read(datadir("instrument_data", "sequoia_FWHM_per_energy.csv"), DataFrame)
-    Es, FWHMs = data.energy, data.FWHM
+    data = readdlm(datadir("instrument_data", "sequoia_FWHM_per_energy.csv"))
+    Es, FWHMs = data[:,1], data[:,2]
     σs = σ_from_FWHM.(FWHMs)
     println(σs)
     σ_seq = LinearInterpolation(Es, σs)

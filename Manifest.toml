@@ -2,7 +2,7 @@
 
 julia_version = "1.9.3"
 manifest_format = "2.0"
-project_hash = "7cbd73c66787226c01aa6b7e61648ec1f91590fe"
+project_hash = "9244608f48b9dd104f10d759f75a21b5ee2b079c"
 
 [[deps.AbstractFFTs]]
 deps = ["LinearAlgebra"]
@@ -265,6 +265,12 @@ deps = ["DataStructures", "EnumX", "ExactPredicates", "Random", "SimpleGraphs"]
 git-tree-sha1 = "bea7984f7e09aeb28a3b071c420a0186cb4fabad"
 uuid = "927a84f5-c5f4-47a5-9785-b46e178433df"
 version = "0.8.8"
+
+[[deps.DelimitedFiles]]
+deps = ["Mmap"]
+git-tree-sha1 = "9e2f36d3c96a820c678f2f1f1782582fcf685bae"
+uuid = "8bb1440f-4735-579b-a4ab-409b98df4dab"
+version = "1.9.1"
 
 [[deps.DiffResults]]
 deps = ["StaticArraysCore"]
