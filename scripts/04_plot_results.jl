@@ -4,10 +4,14 @@ using DrWatson
 using Sunny, GLMakie
 include(srcdir("instrument_corrections.jl"))
 
-# Load the data calculated in the previous script.
+# # Examining intensity data
+#
+# Here intenity information is extracted from the structure factors calculated
+# in the previous script.
 data_renormalized = load(datadir("dssf", "renormalized.jld2"))
 data_unrenormalized = load(datadir("dssf", "unrenormalized.jld2"))
 
+# ## "Spaghetti" plots
 # Define a path through reciprocal space. 
 cryst = data_renormalized["cryst"]
 points = [[0,   0, 0],  # List of wave vectors that define a path
@@ -19,21 +23,21 @@ points = [[0,   0, 0],  # List of wave vectors that define a path
 density = 60
 path, xticks = reciprocal_space_path(cryst, points, density)
 
-# Set up figure for spaghetti plots 
+# Set up figure for spaghetti plots,
 fig = Figure()
 ax1 = Axis(fig[1,1]; xticks, xlabel = "[H,K,L]", ylabel="Energy (meV)", title="Unrenormalized")
 ax2 = Axis(fig[1,2]; xticks, xlabel = "[H,K,L]", ylabel="Energy (meV)", title="Renormalized")
 
-# Plot unrenormalized results
+# and plot both the unrenormalized results,
 sc = data_unrenormalized["sc"]
 energies = available_energies(sc)
 formula = intensity_formula(sc, :perp; kT=kT_meV, formfactors = [FormFactor("Fe2"; g_lande=3/2)])
 
 is = intensities_interpolated(sc, path, formula)
-is = convolve_sequoia(is, energies)  # Add instrumental broadening
+is = convolve_sequoia(is, energies)  # Add instrumental broadening for Sequoia instrument at SNS
 heatmap!(ax1, 1:size(is, 1), energies, is; colorrange=(0.0, 0.5))
 
-# Plot renormalized results
+# and the renormalized results.
 sc_rn = data_renormalized["sc"]
 
 is = intensities_interpolated(sc_rn, path, formula)
@@ -42,10 +46,13 @@ heatmap!(ax2, 1:size(is, 1), energies, is; colorrange=(0.0, 0.5))
 fig
 
 
-# Calculate intensities an individual wave vectors and broaden
-qs = [[1/2, 0, 0], [3/4, 0, 0], [1, 0, 0]] 
-σ = σ_from_FWHM(0.47)
-gauss(x, x₀) = 1/(σ*√2π)*exp(-(x-x₀)^2 / (2σ^2))
+# ## Single-𝐪 cuts
+# 
+# The approach is similar to above, except we will look at one wave vector at a
+# time.
+qs = [[1/2, 0, 0], [3/4, 0, 0], [1, 0, 0]]        # Wave vectors to examine 
+σ = σ_from_FWHM(0.47)                             # Broadening width for HB3 triple-axis spectrometer at HIFER
+gauss(x, x₀) = 1/(σ*√2π)*exp(-(x-x₀)^2 / (2σ^2))  # Broadening function
 
 cuts = intensities_interpolated(sc, qs, formula)
 cuts = broaden_energy(sc, cuts, gauss)
@@ -53,7 +60,7 @@ cuts = broaden_energy(sc, cuts, gauss)
 cuts_rn = intensities_interpolated(sc_rn, qs, formula)
 cuts_rn = broaden_energy(sc, cuts_rn, gauss)
 
-# Plot comparisons at individual wave vectors
+# Plot comparisons at individual wave vectors.
 fig = Figure()
 
 ax1 = Axis(fig[1,1]; ylabel = "Intensity (a.u.)", xlabel = "Energy (meV)", title="Q=(1/2, 0, 0)")
@@ -69,5 +76,4 @@ ln = lines!(ax3, energies, cuts[3,:];    linestyle=:dash, color)
 ln_rn = lines!(ax3, energies, cuts_rn[3,:]; color)
 
 Legend(fig[1,4], [ln, ln_rn], ["Unrenromalized", "Renormalized"])
-
 fig

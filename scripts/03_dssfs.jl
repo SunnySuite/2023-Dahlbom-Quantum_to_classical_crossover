@@ -6,6 +6,8 @@ include(srcdir("model.jl"))
 include(srcdir("sum_rule_utils.jl"))
 include(srcdir("decorrelation_utils.jl"))
 
+# # Calculating S(𝐪,ω)
+#
 # After executing the first script, you should have some estimated κ values
 # for a range of temperatures. In this script we will show how to estimate
 # the dynamical spin structure factor at one of the temperatures for which
@@ -16,10 +18,10 @@ include(srcdir("decorrelation_utils.jl"))
 T_N = 3.05  # Neel temperature in K
 
 # Choose one of the available temperatures above this value.
-kT = kTs[10]
 κ = κs[10]
+kT = kTs[10]
 
-# Our model is specified in terms of meV.
+# Our model is specified in terms of meV, so we'll convert.
 kT_meV = kT*Sunny.meV_per_K
 
 # Set up the system parameters 
@@ -33,11 +35,11 @@ dur_therm = 10.0    # Safe thermalization time
 λ = 0.1             # Phenomenological coupling to thermal bath
 Δt = 0.025          # Integrator step size for dissipationless trajectories
 nsamples = 10       # Number of dynamical trajectories to collect for estimating S(𝐪,ω).
-                    # The manuscript used 1200.
+                    ## The manuscript used 1200.
 ωmax = 10.0         # Maximum energy to resolve.
 nω = 200            # Number of energy bins. Manuscript used 800.
 
-# Estimate S(𝐪, ω), both with and without the renormalization. First set up
+# Now we estimate S(𝐪, ω), both with and without the renormalization. First set up
 # sampled correlations object.
 sys, cryst = FeI2_sys_and_cryst(dims; gs, seed)
 sc = dynamical_correlations(sys; Δt, nω, ωmax)
@@ -68,6 +70,6 @@ thermalize!(sys, kT_meV, Δt_therm, dur_therm)
     add_sample!(sc, sys)
 end
 
-# Save the results.
+# Save these results as well.
 data = DrWatson.@strdict sc sys cryst kT_meV
 wsave(datadir("dssf", "unrenormalized.jld2"), data)
