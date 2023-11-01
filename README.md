@@ -1,6 +1,15 @@
 # Quantum-to-classical crossover in generalized spin systems -- the temperature-dependent spin dynamics of FeI2
 
-The repository demonstrates the basic procedures for reproducing the calculations in the 2023 manuscript, ["Quantum-to-classical crossover in generalized spin systems -- the temperature-dependent spin dynamics of FeI2".](https://put.link.here.when.available)
+The repository contains the code necessary to implement the calculations in the 2023 manuscript, [Quantum-to-classical crossover in generalized spin systems -- the temperature-dependent spin dynamics of FeI2](https://arxiv.org/abs/2310.19905). It contains four Julia scripts using the [Sunny.jl](https://github.com/SunnySuite/Sunny.jl) library. These demonstrate:
+
+1) How to calculate the renormalization factors described in the manuscript above
+2) How to calculate Bragg intensities for the determination of the classical Néel temperature
+3) The estimation of the dynamical spin structure factor using the renormalization factors
+4) The extraction and presentation of intensities using Sunny.jl
+
+The scripts present the minimal necessary machinery to perform a complete calculation. Parameters are selected so that execution time is minimal. Full reproduction of the figures in the paper can be achieved in most cases by increasing systems sizes, increasing energy resolution, examining a wider range of temperatures, and generating many more samples.
+
+A short-form tutorial demonstrating the approach in even more abbreviated form is forthcoming.
 
 ## Notes on implementation and execution
 
