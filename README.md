@@ -5,7 +5,7 @@ The repository contains the code necessary to implement the calculations in the 
 1) How to calculate the renormalization factors described in the manuscript above
 2) How to calculate Bragg intensities for the determination of the classical Néel temperature
 3) The estimation of the dynamical spin structure factor using the renormalization factors
-4) The extraction and presentation of intensities using Sunny.jl
+4) The extraction and presentation of intensities
 
 The scripts present the minimal necessary machinery to perform a complete calculation. Parameters are selected so that execution time is minimal. Full reproduction of the figures in the paper can be achieved in most cases by increasing systems sizes, increasing energy resolution, examining a wider range of temperatures, and generating many more samples.
 
