@@ -62,7 +62,7 @@ function estimate_sum(sys::System{N}, κ, kT, sim_params; observables=nothing) w
     ntherm = round(Int, dur_therm/Δt_therm)
 
     # Thermalize the system
-    langevin = Langevin(Δt_therm; λ, kT)
+    langevin = Langevin(Δt_therm; λ, kT = kT*Sunny.meV_per_K)
     for _ in 1:ntherm
         step!(sys, langevin)
     end
@@ -88,5 +88,5 @@ function estimate_sum(sys::System{N}, κ, kT, sim_params; observables=nothing) w
     end
 
     # Return spectral weight per site.
-    return total_spectral_weight(sc; kT) / length(Sunny.eachsite(sys))
+    return total_spectral_weight(sc; kT = kT*Sunny.meV_per_K) / length(Sunny.eachsite(sys))
 end

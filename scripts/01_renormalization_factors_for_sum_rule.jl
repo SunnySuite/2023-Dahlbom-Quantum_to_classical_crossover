@@ -3,7 +3,7 @@ using DrWatson
 
 using Sunny, GLMakie
 include(srcdir("model.jl"))
-include(srcdir("structure_factor_utils.jl"))
+include(srcdir("sum_rule_utils.jl"))
 
 
 # Function to estimate κ at a given temperature 
@@ -65,7 +65,7 @@ sim_params = (;
 global_bounds = (1.0, 2.0)  # Smallest and largest κs (search space)
 thresh = 0.05               # Allowable deviation in estimated sum, relative to reference 
 ref = 16/3                  # Quadratic Casimir of SU(3) for chosen normalization convention
-kTs = 10 .^ range(log10(0.1), log10(20.0), 10)  # 10 temperatures between 0.1 and 100.0, in meV
+kTs = 10 .^ range(log10(0.1), log10(30.0), 15)  # 15 temperatures between 0.1 and 10.0 in K
 
 
 # Estimate κs for chosen temperatures
