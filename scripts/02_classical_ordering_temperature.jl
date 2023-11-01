@@ -12,18 +12,16 @@ dur_therm = 15.0    # Conservative thermalization time for all temperatures
 
 # Set up a System
 dims = (12, 12, 4)
-gs = 1
-seed = 101
+gs = 1 seed = 101
 
 # Estimate the Bragg intensities at a range of temperatures
-kTs = 10 .^ range(log10(0.1), log10(20), 20)
+kTs = 10 .^ range(log10(0.1), log10(10), 20) # Temperature range in Kelvin. 
+                                             # Manuscript used 88 temperatures between 0.1 and 77 Kelvin.
 nsamples = 10   # Manuscript used 3000 samples per temperature
 
 μs = Float64[]
 σs = Float64[]
 for kT in kTs
-    println("Evaluating Bragg intensities at kT=$kT")
-
     # Initialize a system in the ground state and prepare instant correlation calculation
     sys, cryst = FeI2_sys_and_cryst(dims; gs, seed)
     ic = instant_correlations(sys)
@@ -31,13 +29,15 @@ for kT in kTs
     q_ordering = [q_gs[gs]]  # Ordering wave vector for chosen ground state
 
     # Thermalize the system at kT
-    thermalize!(sys, kT, Δt, dur_therm; λ)
+    kT_meV = kT * Sunny.meV_per_K
+    thermalize!(sys, kT_meV, Δt, dur_therm; λ)
 
     # Collect samples 
     bragg_samples = zeros(nsamples)
-    for n in 1:nsamples
+    println("Sample at kT=$kT")
+    @time for n in 1:nsamples
         # Decorrelate the system and collect a sample
-        decorrelate!(sys, kT, Δt)
+        decorrelate!(sys, kT_meV, Δt)
         add_sample!(ic, sys)
 
         # Evaluate the Bragg intensity, I(q_ord)
@@ -56,6 +56,16 @@ for kT in kTs
     push!(σs, std(bragg_samples))
 end
 
-# Show Bragg intensities as a function of temperature and the numerical
-# derivative of this function.
-lines(kTs, μs[21:end])
+# Calculate numerical derivative of the Bragg intensities as a function of temperature.
+Δμs = μs[2:end] .- μs[1:end-1]
+ΔkTs = kTs[2:end] .- kTs[1:end-1]
+Δμ_ΔkT = Δμs ./ ΔkTs
+kTs_centered = (kTs[2:end] .+ kTs[1:end-1]) ./ 2
+
+# Plot the results 
+fig = Figure()
+xticks = [1, 2, 4, 8]
+ax1 = Axis(fig[1,1]; xscale=log10, xticks, xlabel="kT (K)", ylabel="I_Bragg/I_Bragg-max")
+ax2 = Axis(fig[1,2]; xscale=log10, xticks, xlabel="kT (K)", ylabel="ΔI_Bragg/ΔkT")
+scatter!(ax1, kTs, μs ./ maximum(μs))
+scatter!(ax2, kTs_centered, Δμ_ΔkT ./ maximum(μs))
