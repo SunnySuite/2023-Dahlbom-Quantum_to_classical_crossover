@@ -47,6 +47,8 @@ function renormalize_system!(sys, coherents, κ)
     return nothing
 end
 
+renormalize_system!(sys, κ) = renormalize_system!(sys, sys.coherents, κ)
+
 # Estimate S(𝐪,ω) at temperature kT and evaluate the sum rule using both the
 # classical-to-quantum correspondence factor and moment renormalization. For the
 # publication results, the intensities at the ordering wave vector were
