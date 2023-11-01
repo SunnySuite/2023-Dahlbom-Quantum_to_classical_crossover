@@ -1,6 +1,5 @@
 using Interpolations, LinearAlgebra
 
-
 # Physical basis for SU(3). Needed for calculating the generalized classical sum rule.
 function observable_matrices(; N=3)
     Sx, Sy, Sz = Sunny.spin_matrices(; N)
@@ -17,7 +16,6 @@ function observable_matrices(; N=3)
     return Os
 end
 
-
 # These were the kappa values determined from a larger simulation than the example 
 # code given in this repo. 
 function κval(kT)
@@ -31,7 +29,6 @@ function κval(kT)
     return linear_interpolation(kTs, κs)(kT)
 end
 
-
 # Calculate the the integral of S(𝐪, ω) over both 𝐪 and ω.
 function total_spectral_weight(sc::SampledCorrelations; kT = Inf)
     qs = available_wave_vectors(sc)
@@ -44,13 +41,18 @@ end
 # when running the dynamics.
 function renormalize_system!(sys, coherents, κ)
     sys.κs .= κ
-    sys.coherents .= map(Z -> Sunny.normalize_ket(Z, κ), coherents)
-    sys.dipoles .= map(Z -> Sunny.expected_spin(Z), sys.coherents)
+    for site in Sunny.eachsite(sys)
+        set_coherent!(sys, coherents[site], site)
+    end
     return nothing
 end
 
 # Estimate S(𝐪,ω) at temperature kT and evaluate the sum rule using both the
-# classical-to-quantum correspondence factor and moment renormalization.
+# classical-to-quantum correspondence factor and moment renormalization. For the
+# publication results, the intensities at the ordering wave vector were
+# integrated out prior to applying the classical-to-quantum correspondence
+# factor whenever T < T_N. In other words, the classical-to-quantum rescaling
+# was only applied to the inelastic response.
 function estimate_sum(sys::System{N}, κ, kT, sim_params; observables=nothing) where N
     (; nω, ωmax, Δt, Δt_therm, dur_therm, dur_decorr, nsamples, λ) = sim_params
 
