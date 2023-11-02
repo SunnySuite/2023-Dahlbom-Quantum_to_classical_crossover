@@ -27,7 +27,7 @@ function estimate_kappa(sys, kT, κ0, ref, global_bounds, sim_params; thresh=0.0
     total_weight = estimate_sum(sys, κ0, kT, sim_params; observables)
     bounds = global_bounds
 
-    ## Run binary search algorithm for κ value the yields spectral weight
+    ## Run binary search algorithm to find κ value that yields spectral weight
     ## sufficiently close to the reference
     @time while abs(total_weight - ref) > thresh
         total_weight = estimate_sum(sys, κ0, kT, sim_params; observables)
@@ -78,7 +78,7 @@ sim_params = (;
 ## Parameters for κ search 
 global_bounds = (1.0, 2.0)  # Smallest and largest κs (search space)
 thresh = 0.05               # Allowable deviation in estimated sum, relative to reference 
-ref = 16/3                  # Quadratic Casimir of SU(3) for chosen normalization convention
+ref = 16/3                  # Quadratic Casimir of SU(3) with chosen normalization convention
 kTs = 10 .^ range(log10(0.1), log10(30.0), 15)  # 15 temperatures between 0.1 and 10.0 in K
 
 # ## Perform the search
@@ -101,6 +101,7 @@ wsave(datadir("kappas", "kappas.jld2"), data)
 
 
 # For publication quality results, a larger system should be used and many more
-# samples should be collected for each estimate of κ. Additionally, the same
+# samples should be collected for each estimate of κ(T). Additionally, the same
 # sampled initial conditions should be used for each kT to avoid the possibility
-# of locking the binary search due to stochastic effects.
+# of locking the binary search due to stochastic effects -- e.g., the RNG should
+# be reset to the same state before each trial in the binary search.

@@ -44,6 +44,8 @@ renormalize_system!(sys, κ) = renormalize_system!(sys, sys.coherents, κ)
 # integrated out prior to applying the classical-to-quantum correspondence
 # factor whenever T < T_N. In other words, the classical-to-quantum rescaling
 # was only applied to the inelastic response.
+#
+# NOTE: This function expects the temperature to be in units of Kelvin.
 function estimate_sum(sys::System{N}, κ, kT, sim_params; observables=nothing) where N
     (; nω, ωmax, Δt, Δt_therm, dur_therm, dur_decorr, nsamples, λ) = sim_params
 

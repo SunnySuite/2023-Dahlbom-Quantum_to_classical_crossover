@@ -7,10 +7,12 @@ include(srcdir("decorrelation_utils.jl"))
 
 # # Estimating $T_N$
 #
-# To determine the ordering temperature, we estimate the instantaneous structure factor, S(𝐪),
-# at each temperature of interest and use this to estimate the Bragg intensity I(𝐪_ord). 
+# To determine the Néel temperature, we estimate the instantaneous structure factor, S(𝐪),
+# at a range of temperatures and use the results to estimate the Bragg intensity I_{Bragg}(𝐪_ord)
+# at the same temperatures. We will then calculate the numerical derivative of I_{Bragg}(T).
+# We will take $T_N$ as the location of the discontinuity in this derivative. 
 #
-# We begin by establishing simulation and system parameters.
+# Begin by establishing simulation and system parameters.
 
 dims = (12, 12, 4)  # Manuscript used both 12x12x4 and 24x24x8
 gs = 1              # Choice of ground state irrelevant so long as intensity 
@@ -53,7 +55,7 @@ for kT in kTs
 
         ## Clear out the data in the correlation sampler so no cumulative average
         ## is taken. We instead wish to collect the sample Bragg intensities one
-        ## at a time (as in the line above) so we can estimate the standard
+        ## at a time (as in the line above) so we have access to the standard
         ## error.
         ic.data .= 0.0
         ic.nsamples[1] = 0
