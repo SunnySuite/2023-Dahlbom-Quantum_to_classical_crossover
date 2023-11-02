@@ -21,10 +21,10 @@ T_N = 3.05  # Neel temperature in K
 κ = κs[10]
 kT = kTs[10]
 
-# Our model is specified in terms of meV, so we'll convert.
+# Our model is specified in terms of meV, so we'll convert from Kelvin.
 kT_meV = kT*Sunny.meV_per_K
 
-# Set up the system parameters 
+# Set up the system parameters. 
 dims = (12, 12, 4)  # Manuscript using (24, 24, 8)
 gs = 1              # Select one of the three ground states
 seed = 101          # Seed for RNG
